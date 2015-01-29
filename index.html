@@ -10,6 +10,10 @@
 				fill: orange;
 			}
 			
+			svg path#nominalLine {
+				shape-rendering: crispEdges;
+			}
+			
 			#tooltip {
 				position: absolute;
 				width: 250px;
@@ -151,16 +155,15 @@
 			   });
 				
 				//Create 'nominal EAP' line
+				xRange = xScale.range();
+				lastBarX = xRange[xRange.length-1];
+				barWidth = xScale.rangeBand();
 				svg.append("path")
+					.attr("id", "nominalLine")
 					.attr("d", "M " + xScale(0) + " " + Math.round(yScale(26)) +
-							" H" + (w-padding_right))
-					.attr("stroke", "red");
-					
-					/*.attr("x", xScale(0))
-					.attr("y", yScale(26))
-					.attr("width", w - padding_left - padding_right)
-					.attr("height", "1")
-					.attr("fill", "red");*/
+							" H" + (lastBarX + barWidth))
+					.attr("stroke", "red")
+					.attr("stroke-dasharray", "5,5");
 				
 				//Create Y axis
 				svg.append("g")
