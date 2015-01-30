@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Ajakulu õppeainetele</title>
-        <script type="text/javascript" src="../d3/d3.v3.js"></script>
+        <script type="text/javascript" src="lib/d3.min.js"></script>
 		<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 		<style type="text/css">
 
@@ -25,6 +25,10 @@
 			
 			svg path#nominalLine {
 				shape-rendering: crispEdges;
+			}
+			
+			.xlabel {
+				font-size: 1.2em;
 			}
 			
 			#tooltip {
@@ -91,14 +95,18 @@
 			}
 			var parser = d3.dsv(";", "text/plain");
             var file = parser("data/study_data.csv", accessor, function(error, rows) {
-				dataset = rows;			
+				dataset = rows;
+				
+				var maxEl = d3.max(dataset, function(d) { return d.h_per_eap; } );
+				var minEl = d3.min(dataset, function(d) { return d.h_per_eap; } );
+				console.log(minEl + " " + maxEl);
 				
 				//Width and height
 				var w = 600;
-				var h = 250;
+				var h = 300;
 				var padding_left = 30;
 				var padding_right = 30;
-				var padding_bottom = 10;
+				var padding_bottom = 40;
 				var padding_top = 10;
 				
 				//Scale functions
@@ -115,6 +123,16 @@
 							  .scale(yScale)
 							  .orient("left")
 							  .ticks(5);
+							  
+				//Define color interpolator for bars
+				var interpolate = d3.interpolateRgb("#deebf7", "#3182bd");
+				var colorScale = d3.scale.linear()
+					.domain([minEl, maxEl])
+					.range([0, 1]);
+				function colorVal(v) {
+					return interpolate(colorScale(v));
+				}
+					
 				
 				//Create SVG element
 				var svg = d3.select("body").select("#contents")
@@ -139,7 +157,7 @@
 						return yScale(0) - yScale(d.h_per_eap);
 				   })
 				   .attr("fill", function(d) {
-						return "rgb(0, 0, " + (d.h_per_eap * 10) + ")";
+						return colorVal(d.h_per_eap);
 				   })
 				   .on("mouseover", function(d) {
 
@@ -186,6 +204,14 @@
 					.attr("class", "axis")
 					.attr("transform", "translate(" + padding_left + ",0)")
 					.call(yAxis);
+					
+				// Create X axis label
+				svg.append("text")
+					.attr("class", "xlabel")
+					.attr("x", (xRange[0] + lastBarX + barWidth) / 2)	// middle of xScale
+					.attr("y", yScale(0) + 30)	// y axis zero plus a bit
+					.attr("text-anchor", "middle")
+					.text("Õppeained");
 			});
         </script>
     </body>
