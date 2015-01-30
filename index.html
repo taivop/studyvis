@@ -27,7 +27,7 @@
 				shape-rendering: crispEdges;
 			}
 			
-			.xlabel {
+			.xlabel, .ylabel {
 				font-size: 1.2em;
 			}
 			
@@ -66,7 +66,7 @@
 			
 			.axis text {
 				font-family: sans-serif;
-				font-size: 11px;
+				font-size: 0.85em;
 			}
 						
 
@@ -99,12 +99,11 @@
 				
 				var maxEl = d3.max(dataset, function(d) { return d.h_per_eap; } );
 				var minEl = d3.min(dataset, function(d) { return d.h_per_eap; } );
-				console.log(minEl + " " + maxEl);
 				
 				//Width and height
 				var w = 600;
 				var h = 300;
-				var padding_left = 30;
+				var padding_left = 50;
 				var padding_right = 30;
 				var padding_bottom = 40;
 				var padding_top = 10;
@@ -211,7 +210,15 @@
 					.attr("x", (xRange[0] + lastBarX + barWidth) / 2)	// middle of xScale
 					.attr("y", yScale(0) + 30)	// y axis zero plus a bit
 					.attr("text-anchor", "middle")
-					.text("Õppeained");
+					.text("õppeained");
+				
+				// Create Y axis label
+				//yLabelX = 
+				svg.append("text")
+					.attr("class", "ylabel")
+					.attr("transform", "translate(" + (padding_left * 0.3) + "," + (yScale.range()[0] + yScale.range()[1]) / 2 +")rotate(270)")
+					.attr("text-anchor", "middle")
+					.text("ajakulu EAP kohta / h");
 			});
         </script>
     </body>
