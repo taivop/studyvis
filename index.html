@@ -90,7 +90,7 @@
 		<p class="explain">Selgitav tekst. Kõik õppimine sh loengud, praksid, iseseisev töö, lugemine jne.</p>
 		<div id="chart1">
 		<h3>Ajakulu EAP kohta erinevate ainete jaoks</h3>
-		<p class="explain">Liigu hiirega tulpade peal, et näha vastava aine nimetust ja infot.</p>
+		<p class="explain">Liigu hiirega tulpade peal, et näha vastava aine nimetust ja infot. Katkendlik joon näitab nominaalkoormust (26 tundi õppimist EAP kohta). Nagu näha, siis ei täitnud ükski aine nominaalkoormust.</p>
 		<div id="tooltip" class="hidden">
 			<p><strong>Important Label Heading</strong></p>
 			<p><span id="eap">0</span><br />
@@ -127,6 +127,7 @@
 				var padding_right = 0;
 				var padding_bottom = 40;
 				var padding_top = 10;
+				var nominalEap = 26;
 				
 				//Scale functions
 				var xScale = d3.scale.ordinal()
@@ -213,9 +214,9 @@
 				barWidth = xScale.rangeBand();
 				svg.append("path")
 					.attr("id", "nominalLine")
-					.attr("d", "M " + xScale(0) + " " + Math.round(yScale(26)) +
+					.attr("d", "M " + xScale(0) + " " + Math.round(yScale(nominalEap)) +
 							" H" + (lastBarX + barWidth))
-					.attr("stroke", "red")
+					.attr("stroke", colorVal(nominalEap))
 					.attr("stroke-dasharray", "5,5");
 				
 				//Create Y axis
