@@ -41,12 +41,20 @@
 			
 			#chart2 svg {
 				float: left;
-				margin-right: 20px;
+				margin-right: 40px;
 			}
 			
-			#chart2 explainText {
-				float: right;
-				margin-top: 20px;
+			#chart2 #pieInnerText {
+				font-size: 2em;
+			}
+			
+			#chart2 #explainText {
+				padding-top: 20px;
+				min-height: 300px;
+			}
+			
+			#chart3 {
+				clear: both;
 			}
 			
 			.xlabel, .ylabel {
@@ -114,15 +122,15 @@
 		<svg></svg>
 		<div id="explainText">
 			<p><strong>Moodul:</strong></p>
-			<p id="moduleName">Matemaatika alusmoodul</p>
+			<p id="moduleName">[liigu hiirega vasakul sektori peale]</p>
 			<p><strong>Ained: </strong></p>
-			<ul style="list-style-type:none">
-				<li>Diskreetse matemaatika elemendid</li>
-				<li>Matemaatiline analüüs I</li>
-				<li>Tõenäosusteooria ja statistika I</li>
-				<li>Algebra I</li>
+			<ul style="list-style-type:circle">
+				
 			</ul>
 				</div>
+		</div>
+		<div id="chart3">
+		<h3>Kolmas graafik</h3>
 		</div>
 		</div>
         <script type="text/javascript">
@@ -268,8 +276,8 @@
 		<script type="text/javascript">
 			//Chart 2
 			//Width and height
-			var w2 = 300;
-			var h2 = 300;
+			var w2 = 270;
+			var h2 = 270;
 			var outerRadius = w2 / 2;
 			var innerRadius = w2 / 3;
 			
@@ -324,6 +332,10 @@
 							.text(function(d) { return d; });
 							
 						courses.exit().remove();
+						
+						// Update pie inner text
+						d3.select("#chart2").select("#pieInnerText")
+							.text(Math.round(modules[i].hours) + " h");
 					})
 					.on("mouseout", function(d, i) {
 						// Update fill
@@ -345,10 +357,18 @@
 					})
 					.attr("text-anchor", "middle")
 					.attr("font-family", "sans-serif")
-					.attr("font-weight", "bold")
+					.attr("font-weight", "bold");/*
 					.text(function(d) {
 						return Math.round(d.value);
-					});
+					});*/
+				
+				// Label inside ring
+				svg2.append("text")
+					.attr("id", "pieInnerText")
+					.attr("text-anchor", "middle")
+					.attr("x", w2/2 * 1.02)			// magic numbers to rectify position
+					.attr("y", (h2/2) * 1.09)
+					.text("---");
 			});
 		</script>
     </body>
