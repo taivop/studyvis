@@ -282,8 +282,8 @@
 			}
 			var parser = d3.dsv(";", "text/plain");
 			
-			var file = parser("data/by_module.csv", accessor, function(error, rows) {
-				var dataset = rows;
+			var file = d3.json("data/modules_courses.json", function(error, json) {
+				var modules = json.modules;
 
 				var arc = d3.svg.arc()
 								.innerRadius(innerRadius)
@@ -301,11 +301,22 @@
 				
 				//Set up groups
 				var arcs = svg2.selectAll("g.arc")
-							  .data(pie(dataset.map(function(d) { return d.hours; })))
-							  .enter()
-							  .append("g")
-							  .attr("class", "arc")
-							  .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+					.data(pie(modules.map(function(d) { return d.hours; })))
+					.enter()
+					.append("g")
+					.attr("class", "arc")
+					.attr("transform", "translate(" + outerRadius + "," + outerRadius + ")")
+					.on("mouseover", function(d, i) {
+						console.log("mouse over");
+						console.log(this);
+						d3.select(this).select("path")
+							.attr("fill", "black");
+					})
+					.on("mouseout", function(d, i) {
+						//Hide the tooltip
+						d3.select(this).select("path")
+							.attr("fill", color(i));
+					});
 				
 				//Draw arc paths
 				arcs.append("path")
