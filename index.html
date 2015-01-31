@@ -39,6 +39,16 @@
 				shape-rendering: crispEdges;
 			}
 			
+			#chart2 svg {
+				float: left;
+				margin-right: 20px;
+			}
+			
+			#chart2 explainText {
+				float: right;
+				margin-top: 20px;
+			}
+			
 			.xlabel, .ylabel {
 				font-size: 1.2em;
 			}
@@ -101,6 +111,18 @@
 		<div id="chart2">
 		<h3>Ajakulu moodulitele</h3>
 		<p class="explain">Moodulites on ainete nominaalmaht võrdne (24 EAP-d igas moodulis).</p>
+		<svg></svg>
+		<div id="explainText">
+			<p><strong>Moodul:</strong></p>
+			<p>Matemaatika alusmoodul</p>
+			<p><strong>Ained: </strong></p>
+			<ul style="list-style-type:none">
+				<li>Diskreetse matemaatika elemendid</li>
+				<li>Matemaatiline analüüs I</li>
+				<li>Tõenäosusteooria ja statistika I</li>
+				<li>Algebra I</li>
+			</ul>
+				</div>
 		</div>
 		</div>
         <script type="text/javascript">
@@ -244,7 +266,7 @@
         </script>
 		
 		<script type="text/javascript">
-			//Chart 1
+			//Chart 2
 			//Width and height
 			var w2 = 300;
 			var h2 = 300;
@@ -254,26 +276,14 @@
 			var dataset = [];
 			var accessor = function(d) {
 				return {
-					code: d.kood,
-					course: d.aine,
-					hours: 24 * d.paevi,
+					hours: d.tunde,
 					module: d.moodul
 				};	
 			}
 			var parser = d3.dsv(";", "text/plain");
 			
 			var file = parser("data/by_module.csv", accessor, function(error, rows) {
-				moduleData = rows;
-				console.log(dataset);
-				
-				//Get all possible modules
-				modules = [];
-				for(i=0; i<moduleData; i++) {
-					modules.push(moduleData);
-					
-				}
-				
-				var dataset = [ 5, 10, 20, 45, 6, 25 ];
+				var dataset = rows;
 
 				var arc = d3.svg.arc()
 								.innerRadius(innerRadius)
@@ -285,14 +295,13 @@
 				var color = d3.scale.category10();
 
 				//Create SVG element
-				var svg2 = d3.select("body").select("#chart2")
-							.append("svg")
+				var svg2 = d3.select("body").select("#chart2").select("svg")
 							.attr("width", w2)
 							.attr("height", h2);
 				
 				//Set up groups
 				var arcs = svg2.selectAll("g.arc")
-							  .data(pie(dataset))
+							  .data(pie(dataset.map(function(d) { return d.hours; })))
 							  .enter()
 							  .append("g")
 							  .attr("class", "arc")
@@ -311,8 +320,10 @@
 						return "translate(" + arc.centroid(d) + ")";
 					})
 					.attr("text-anchor", "middle")
+					.attr("font-family", "sans-serif")
+					.attr("font-weight", "bold")
 					.text(function(d) {
-						return d.value;
+						return Math.round(d.value);
 					});
 			});
 		</script>
