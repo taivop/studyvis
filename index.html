@@ -114,7 +114,7 @@
 		<svg></svg>
 		<div id="explainText">
 			<p><strong>Moodul:</strong></p>
-			<p>Matemaatika alusmoodul</p>
+			<p id="moduleName">Matemaatika alusmoodul</p>
 			<p><strong>Ained: </strong></p>
 			<ul style="list-style-type:none">
 				<li>Diskreetse matemaatika elemendid</li>
@@ -307,13 +307,26 @@
 					.attr("class", "arc")
 					.attr("transform", "translate(" + outerRadius + "," + outerRadius + ")")
 					.on("mouseover", function(d, i) {
-						console.log("mouse over");
-						console.log(this);
+						// Update fill
 						d3.select(this).select("path")
 							.attr("fill", "black");
+						// Update module name
+						d3.select("#chart2").select("#explainText").select("#moduleName")
+							.text(modules[i].name);
+						// Update module courses
+						var courses = d3.select("#chart2").select("#explainText").select("ul").selectAll("li")
+							.data(modules[i].courses);
+						
+						courses
+							.text(function(d) { return d; });
+							
+						courses.enter().append("li")
+							.text(function(d) { return d; });
+							
+						courses.exit().remove();
 					})
 					.on("mouseout", function(d, i) {
-						//Hide the tooltip
+						// Update fill
 						d3.select(this).select("path")
 							.attr("fill", color(i));
 					});
