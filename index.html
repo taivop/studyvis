@@ -318,7 +318,7 @@
 					.on("mouseover", function(d, i) {
 						// Update fill
 						d3.select(this).select("path")
-							.attr("fill", "black");
+							.attr("fill", "#ccc");
 						// Update module name
 						d3.select("#chart2").select("#explainText").select("#moduleName")
 							.text(modules[i].name);
