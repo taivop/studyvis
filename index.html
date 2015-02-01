@@ -35,7 +35,7 @@
 			}
 			
 			
-			svg path#nominalLine {
+			#chart1 svg path#nominalLine {
 				shape-rendering: crispEdges;
 			}
 			
@@ -55,13 +55,14 @@
 			
 			#chart3 {
 				clear: both;
+				position: relative;
 			}
 			
 			.xlabel, .ylabel {
 				font-size: 1.2em;
 			}
 			
-			#chart1 #tooltip {
+			#tooltip {
 				position: absolute;
 				width: 250px;
 				height: auto;
@@ -76,11 +77,11 @@
 				pointer-events: none;
 			}
 			
-			#chart1 #tooltip.hidden {
+			#tooltip.hidden {
 				display: none;
 			}
 			
-			#chart1 #tooltip p {
+			#tooltip p {
 				margin: 0;
 				font-family: sans-serif;
 				font-size: 16px;
@@ -140,6 +141,12 @@
 		<div id="chart3">
 		<h3>Kolmas graafik</h3>
 		<svg></svg>
+		<div id="tooltip" class="hidden">
+			<p><strong>Important Label Heading</strong></p>
+			<p><span id="date">0</span><br />
+				<span id="hours">0</span>
+				</p>
+		</div>
 		</div>
 		<div>
 		<h3>Kontakandmed jms</h3>
@@ -446,8 +453,7 @@
 				//Create SVG element				
 				var svg3 = d3.select("#chart3").select("svg")
 					.attr("width", w3)
-					.attr("height", h3)
-					.attr("style", "border-style: solid");;
+					.attr("height", h3);
 				
 				//Enter data
 				svg3.selectAll("rect")
@@ -458,7 +464,38 @@
 					.attr("width", function(d) { return xScale.rangeBand(); })
 					.attr("y", function(d, i) { return yScale(d.weekday); })
 					.attr("height", function(d) { return yScale.rangeBand(); })
-					.attr("fill", function(d) { return colorVal(d.hours); });
+					.attr("fill", function(d) { return colorVal(d.hours); })
+					.on("mouseover", function(d) {
+
+						//Get this rect's x/y values, then augment for the tooltip
+						var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.rangeBand() / 2;
+						var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + h3;
+
+						//Update the tooltip position and value
+						tooltip = d3.select("#chart3").select("#tooltip")
+							.style("left", xPosition + "px")
+							.style("top", yPosition + "px")	
+						
+						var dateFormatter = d3.time.format("%d.%m.%Y");
+						tooltip.select("#date")
+							.text("Kuupäev: " + dateFormatter(d.date));
+						var hours = Math.floor(d.hours);
+						var minutes = Math.round((d.hours % 1) * 60);
+						tooltip.select("#hours")
+							.text(hours + " h " + minutes + " min");
+						tooltip.select("strong")
+							.text(dateFormatter(d.date));
+				   
+						//Show the tooltip
+						tooltip.classed("hidden", false);
+
+				   })
+				   .on("mouseout", function() {
+				   
+						//Hide the tooltip
+						d3.select("#chart3").select("#tooltip").classed("hidden", true);
+						
+					});
 
 			});
 		</script>
