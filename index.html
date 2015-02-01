@@ -442,7 +442,9 @@
 				var yScale = d3.scale.ordinal()
 					.domain(d3.range(dayMin, dayMax+1))
 					.rangeRoundBands([0, h3], 0.05);
-				var interpolate2 = d3.interpolateRgb("#deebf7", "#3182bd");
+				var colorMin = "#feedde";
+				var colorMax = "#a63603";
+				var interpolate2 = d3.interpolateRgb(colorMin, colorMax);
 				var colorScale2 = d3.scale.linear()
 					.domain([hoursMin, hoursMax])
 					.range([0, 1]);
