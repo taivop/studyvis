@@ -6,6 +6,13 @@
         <script type="text/javascript" src="lib/d3.min.js"></script>
 		<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 		<style type="text/css">
+			a {
+				color: black;
+			}
+			
+			a:active {
+				color: grey;
+			}
 
 			#chart1 rect:hover {
 				fill: orange;
@@ -131,7 +138,8 @@
 		<div id="contents">
 		<h1>Õpiandmete visualiseering</h1>
 		<p class="explain">Alates esimese kursuse viiendast nädalast olen kogunud oma õppimise kohta andmeid: algus- ja lõpuaeg ning õppeaine, millega selle aja jooksul tegelesin. Andmetes sisaldub kõik, mida pean produktiivseks õppimiseks, sh loengud, praktikumid, seminarid, iseseisev töö, lugemine jne.</p>
-		<p class="explain">Olen andmeid töödelnud ja allpool esitanud nad hästiarusaadaval kujul - visualiseering muudab andmed palju arusaadavamaks, kuna inimese visuaalsüsteem on võimas infotöötlus- ja mustrite leidmise masin.</p>
+		<p class="explain">Olen andmeid töödelnud ja allpool esitanud nad hästiarusaadaval kujul - visualiseering muudab andmed palju arusaadavamaks, kuna inimese visuaalsüsteem on võimas infotöötlus- ja mustrite leidmise masin. Kommentaaridega analüüsi toodud graafikute kohta leiad varsti mu <a href="http://pungas.ee/">blogist</a>.</p>
+		<p class="explain">Et graafikuid korralikult kuvataks, tuleb lehte vaadata <a href="http://browsehappy.com/">modernse brauseriga</a>.</p>
 		<h3>Ajakulu tundides EAP kohta erinevatele ainetele</h3>
 		<p class="explain">Järgneval graafikul on iga tulp üks õppeaine ja ained on sorteeritud ühe ajakulu (y-telje väärtuse) kahanevas järjekorras. Kuna ajakulu on läbi jagatud EAP-de arvuga, peaks teoreetiliselt olema kõigi tulpade kõrgused enam-vähem võrdsed. Katkendlik joon graafiku ülaosas tähistab nominaalkoormust tundides EAP kohta (26 h/EAP) - ideaalis peaksid kõik tulbad ulatuma sinnani.</p><p class="explain">Tärniga (*) tähistatud aineid võtsin tervislikel põhjustel kaks korda; see võib ajakulu ainele ühes või teises suunas mõjutada. Hiirega tulba peal hõljudes näed vastava aine nimetust ja muud infot.</p>
 		<div id="chart1">
@@ -272,7 +280,7 @@
 
 						//Get this bar's x/y values, then augment for the tooltip
 						var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.rangeBand() / 2;
-						var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + h/2;
+						var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + h / 2;
 
 						//Update the tooltip position and value
 						tooltip = d3.select("#chart1").select("#tooltip")
@@ -564,6 +572,18 @@
 					});
 
 			});
+		</script>
+		
+		
+		<script>
+		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		  ga('create', 'UA-37828611-1', 'auto');
+		  ga('send', 'pageview');
+
 		</script>
     </body>
 </html>
