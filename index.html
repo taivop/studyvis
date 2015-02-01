@@ -143,8 +143,8 @@
 		<svg></svg>
 		<div id="tooltip" class="hidden">
 			<p><strong>Important Label Heading</strong></p>
-			<p><span id="date">0</span><br />
-				<span id="hours">0</span>
+			<p><span id="hours">0</span><br />
+				<span id="week">0</span><br />
 				</p>
 		</div>
 		</div>
@@ -411,7 +411,10 @@
 		<script type="text/javascript">
 			//Chart 3
 			var w3 = 600;
-			var h3 = 100;
+			var h3 = 150;
+			var padding_left3 = 20;
+			
+			var daysOfWeek = ["E", "T", "K", "N", "R", "L", "P"];
 			
 			//Get data
 			var dataByDay = [];
@@ -457,9 +460,20 @@
 					.attr("width", w3)
 					.attr("height", h3);
 					
+				//Create axes
+				svg3.append("g")
+					.selectAll(".yTickLabel")
+					.data(daysOfWeek)
+					.enter()
+					.append("text")
+					.attr("class", "y axis")
+					.attr("text-anchor", "start")
+					.attr("x", function(d) { return xScale(weekMin) - 20; })
+					.attr("y", function(d, i) { return yScale(i+1) + 0.8 * yScale.rangeBand(); })
+					.text(function(d) { return d; });
+					
 				xRange = xScale.range();
 				yRange = yScale.range();
-				console.log(xRange[xRange.length-1]-xRange[0]+xScale.rangeBand());
 				//Create background rect
 				svg3.append("rect")
 					.attr("x", xScale(weekMin))
@@ -478,26 +492,26 @@
 					.attr("y", function(d, i) { return yScale(d.weekday); })
 					.attr("height", function(d) { return yScale.rangeBand(); })
 					.attr("fill", function(d) { return colorVal(d.hours); })
-					.on("mouseover", function(d) {
+					.on("mouseover", function(d, i) {
 
 						//Get this rect's x/y values, then augment for the tooltip
 						var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.rangeBand() / 2;
-						var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + h3;
+						var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + h3 / 2;
 
 						//Update the tooltip position and value
 						tooltip = d3.select("#chart3").select("#tooltip")
 							.style("left", xPosition + "px")
 							.style("top", yPosition + "px")	
 						
-						var dateFormatter = d3.time.format("%d.%m.%Y");
-						tooltip.select("#date")
-							.text("Kuupäev: " + dateFormatter(d.date));
+						tooltip.select("#week")
+							.text("õpingute " + d.week + ". nädal");
 						var hours = Math.floor(d.hours);
 						var minutes = Math.round((d.hours % 1) * 60);
 						tooltip.select("#hours")
 							.text(hours + " h " + minutes + " min");
+						var dateFormatter = d3.time.format("%d.%m.%Y");
 						tooltip.select("strong")
-							.text(dateFormatter(d.date));
+							.text(daysOfWeek[d.weekday - 1] + " " + dateFormatter(d.date));
 				   
 						//Show the tooltip
 						tooltip.classed("hidden", false);
