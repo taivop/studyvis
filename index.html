@@ -441,9 +441,9 @@
 					.rangeRoundBands([0, w3], 0);
 				var yScale = d3.scale.ordinal()
 					.domain(d3.range(dayMin, dayMax+1))
-					.rangeRoundBands([0, h3], 0.05);
-				var colorMin = "#feedde";
-				var colorMax = "#a63603";
+					.rangeRoundBands([0, h3], 0);
+				var colorMin = "#fcfbfd";//"#feedde";
+				var colorMax = "#3f007d";
 				var interpolate2 = d3.interpolateRgb(colorMin, colorMax);
 				var colorScale2 = d3.scale.linear()
 					.domain([hoursMin, hoursMax])
@@ -456,9 +456,20 @@
 				var svg3 = d3.select("#chart3").select("svg")
 					.attr("width", w3)
 					.attr("height", h3);
+					
+				xRange = xScale.range();
+				yRange = yScale.range();
+				console.log(xRange[xRange.length-1]-xRange[0]+xScale.rangeBand());
+				//Create background rect
+				svg3.append("rect")
+					.attr("x", xScale(weekMin))
+					.attr("y", yScale(dayMin))
+					.attr("width", xRange[xRange.length-1]-xRange[0]+xScale.rangeBand())
+					.attr("height", yRange[yRange.length-1]-yRange[0]+yScale.rangeBand())
+					.attr("fill", colorMin);
 				
 				//Enter data
-				svg3.selectAll("rect")
+				svg3.selectAll(".datapoint")
 					.data(dataByDay)
 					.enter()
 					.append("rect")
