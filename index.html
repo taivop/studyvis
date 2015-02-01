@@ -100,6 +100,11 @@
 				font-size: 0.85em;
 			}
 			
+			#chart3 .axis text {
+				font-family: "PT Sans";
+				font-size: 1em;
+			}
+			
 			.grid .tick {
 				stroke: lightgrey;
 				opacity: 0.7;
@@ -107,7 +112,7 @@
 			}
 			.grid path {
 				  stroke-width: 0;
-			}			
+			}
 
 		</style>
     </head>
@@ -187,7 +192,7 @@
 				var yScale = d3.scale.linear()
 								.domain([0, 27])
 								.range([h-padding_bottom, padding_top]);
-				
+								
 				//Define Y axis
 				var yAxis = d3.svg.axis()
 							  .scale(yScale)
@@ -411,8 +416,9 @@
 		<script type="text/javascript">
 			//Chart 3
 			var w3 = 600;
-			var h3 = 150;
+			var h3 = 180;
 			var padding_left3 = 20;
+			var padding_bottom3 = 40;
 			
 			var daysOfWeek = ["E", "T", "K", "N", "R", "L", "P"];
 			
@@ -436,6 +442,8 @@
 				var weekMax = d3.max(dataByDay, function(d) { return d.week; });		// max week
 				var hoursMin = d3.min(dataByDay, function(d) { return d.hours; });		// min hours
 				var hoursMax = d3.max(dataByDay, function(d) { return d.hours; });		// max hours
+				var dateMin = d3.min(dataByDay, function(d) { return d.date; });		// max hours
+				var dateMax = d3.max(dataByDay, function(d) { return d.date; });		// max hours
 				var dayMin = 1;
 				var dayMax = 7;
 				
@@ -444,8 +452,9 @@
 					.rangeRoundBands([0, w3], 0);
 				var yScale = d3.scale.ordinal()
 					.domain(d3.range(dayMin, dayMax+1))
-					.rangeRoundBands([0, h3], 0);
-				var colorMin = "#fcfbfd";//"#feedde";
+					.rangeRoundBands([0, h3-padding_bottom3], 0);
+					
+				var colorMin = "#fcfbfd";
 				var colorMax = "#3f007d";
 				var interpolate2 = d3.interpolateRgb(colorMin, colorMax);
 				var colorScale2 = d3.scale.linear()
@@ -454,6 +463,10 @@
 				function colorVal(v) {
 					return interpolate2(colorScale2(v));
 				}
+				
+				var timeScale = d3.time.scale()
+					.domain([dateMin, dateMax])
+					.range([xScale(weekMin), xScale(weekMax) + xScale.rangeBand()]);
 				
 				//Create SVG element				
 				var svg3 = d3.select("#chart3").select("svg")
@@ -472,9 +485,19 @@
 					.attr("y", function(d, i) { return yScale(i+1) + 0.8 * yScale.rangeBand(); })
 					.text(function(d) { return d; });
 					
+				var timeAxis = d3.svg.axis()
+					.scale(timeScale)
+					.ticks(3);
+					
+				svg3.append("g")
+					.attr("class", "time axis")
+					.attr("transform", "translate(0," + (h3-padding_bottom3/2) + ")")
+					.call(timeAxis)
+					
+				//Create background rect
 				xRange = xScale.range();
 				yRange = yScale.range();
-				//Create background rect
+				
 				svg3.append("rect")
 					.attr("x", xScale(weekMin))
 					.attr("y", yScale(dayMin))
