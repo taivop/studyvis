@@ -133,7 +133,7 @@
 		<p class="explain">Alates esimese kursuse viiendast nädalast olen kogunud oma õppimise kohta andmeid: algus- ja lõpuaeg ning õppeaine, millega selle aja jooksul tegelesin. Andmetes sisaldub kõik, mida pean produktiivseks õppimiseks, sh loengud, praktikumid, seminarid, iseseisev töö, lugemine jne.</p>
 		<p class="explain">Olen andmeid töödelnud ja allpool esitanud nad hästiarusaadaval kujul - visualiseering muudab andmed palju arusaadavamaks, kuna inimese visuaalsüsteem on võimas infotöötlus- ja mustrite leidmise masin.</p>
 		<h3>Ajakulu tundides EAP kohta erinevatele ainetele</h3>
-		<p class="explain">Järgneval graafikul on iga tulp üks õppeaine ja ained on sorteeritud ühe ajakulu (y-telje väärtuse) kahanevas järjekorras. Kuna ajakulu on läbi jagatud EAP-de arvuga, peaks teoreetiliselt olema kõigi tulpade kõrgused enam-vähem võrdsed. Katkendlik joon graafiku ülaosas tähistab nominaalkoormust tundides EAP kohta (26 h/EAP) - ideaalis peaksid kõik tulbad ulatuma sinnani.</p><p class="explain">Tärniga (*) tähistatud aineid võtsin kaks korda; see võib ajakulu ainele ühes või teises suunas mõjutada. Hiirega tulba peal hõljudes näed vastava aine nimetust ja muud infot.</p>
+		<p class="explain">Järgneval graafikul on iga tulp üks õppeaine ja ained on sorteeritud ühe ajakulu (y-telje väärtuse) kahanevas järjekorras. Kuna ajakulu on läbi jagatud EAP-de arvuga, peaks teoreetiliselt olema kõigi tulpade kõrgused enam-vähem võrdsed. Katkendlik joon graafiku ülaosas tähistab nominaalkoormust tundides EAP kohta (26 h/EAP) - ideaalis peaksid kõik tulbad ulatuma sinnani.</p><p class="explain">Tärniga (*) tähistatud aineid võtsin tervislikel põhjustel kaks korda; see võib ajakulu ainele ühes või teises suunas mõjutada. Hiirega tulba peal hõljudes näed vastava aine nimetust ja muud infot.</p>
 		<div id="chart1">
 		<div id="tooltip" class="hidden">
 			<p><strong>Important Label Heading</strong></p>
@@ -535,7 +535,7 @@
 
 						//Get this rect's x/y values, then augment for the tooltip
 						var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.rangeBand() / 2;
-						var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + h3 / 2;
+						var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + yScale.rangeBand();
 
 						//Update the tooltip position and value
 						tooltip = d3.select("#chart3").select("#tooltip")
