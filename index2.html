@@ -136,49 +136,12 @@
     </head>
     <body>
 		<div id="contents">
-		<h1>Õpiandmete visualiseering</h1>
-		<p class="explain">Alates esimese kursuse viiendast nädalast olen kogunud oma õppimise kohta andmeid: algus- ja lõpuaeg ning õppeaine, millega selle aja jooksul tegelesin. Andmetes sisaldub kõik, mida pean produktiivseks õppimiseks, sh loengud, praktikumid, seminarid, iseseisev töö, lugemine jne.</p>
-		<p class="explain">Olen andmeid töödelnud ja allpool esitanud nad hästiarusaadaval kujul - visualiseering muudab andmed palju arusaadavamaks, kuna inimese visuaalsüsteem on võimas infotöötlus- ja mustrite leidmise masin. Kommentaaridega analüüsi toodud graafikute kohta leiad varsti mu <a href="http://pungas.ee/">blogist</a>.</p>
-		<p class="explain">Et graafikuid korralikult kuvataks, tuleb lehte vaadata <a href="http://browsehappy.com/">modernse brauseriga</a>.</p>
-		<h3>Ajakulu tundides EAP kohta erinevatele ainetele</h3>
-		<p class="explain">Järgneval graafikul on iga tulp üks õppeaine ja ained on sorteeritud ajakulu (y-telje väärtuse) kahanevas järjekorras. Kuna ajakulu on läbi jagatud EAP-de arvuga, peaks teoreetiliselt olema kõigi tulpade kõrgused enam-vähem võrdsed. Katkendlik joon graafiku ülaosas tähistab nominaalkoormust tundides EAP kohta (26 h/EAP) - ideaalis peaksid kõik tulbad ulatuma sinnani.</p><p class="explain">Tärniga (*) tähistatud aineid võtsin tervislikel põhjustel kaks korda; see võib ajakulu ainele ühes või teises suunas mõjutada. Hiirega tulba peal hõljudes näed vastava aine nimetust ja muud infot.</p>
 		<div id="chart1">
 		<div id="tooltip" class="hidden">
 			<p><strong>Important Label Heading</strong></p>
 			<p><span id="eap">0</span><br />
 				<span id="h_per_eap">0</span>
 				</p>
-		</div>
-		</div>
-		<div id="chart2">
-		<h3>Ajakulu tundides iga mooduli kohta</h3>
-		<p class="explain">TÜ õppekavad koosnevad moodulitest, mis koondavad enamasti mingi sarnase temaatikaga aineid, näiteks matemaatika alusmoodul informaatika õppekavas.<br />Igas moodulis on ainete nominaalmaht sama (24 EAP-d moodulis). See tähendab, et kui kõik moodulid oleksid võrdse raskusega, oleks ring jaotatud kuueks täpselt võrdseks osaks. Allolev graafik näitab, kui palju iga moodul tegelikult aega võttis.</p>
-		<p class="explain">
-			Liigu hiirega ringi sektorite peal, et näha vastava mooduli nimetust ja sellesse kuuluvaid aineid. Kahe tärniga (**) tähistatud aineid ei ole ma (veel) võtnud, mistõttu eeldasin, et need võtavad sama palju aega kui mooduli ülejäänud ained keskmiselt.</p>
-		<svg></svg>
-		<div id="explainText">
-			<p><strong>Moodul:</strong></p>
-			<p id="moduleName">[liigu hiirega vasakul sektori peale]</p>
-			<p><strong>Ained: </strong></p>
-			<ul style="list-style-type:circle">
-				
-			</ul>
-				</div>
-		</div>
-		<h3>Ajakulu tundides nädala ja nädalapäeva järgi</h3>
-		<p class="explain">Järgneva graafiku ühel teljel on nädalapäevad esmaspäevast pühapäevani ja teisel teljel nädalad. See tähendab, et päevad jooksevad vasakult ülemisest nurgast alla ja tulpades vasakult paremale.</p>
-		<p class="explain">Iga kasti värv näitab, kui kaua vastaval päeval õppisin. Hõlju hiirega kastide peal, et näha vastava päeva infot. Kui kasti peal hõljudes ei kuvata lisainfot, siis sel päeval andmeid ei olnud, s.t. ma ei õppinud.</p>
-		<div id="chart3">
-		<svg></svg>
-		<div id="tooltip" class="hidden">
-			<p><strong>Important Label Heading</strong></p>
-			<p><span id="hours">0</span><br />
-				<span id="week">0</span><br />
-				</p>
-		</div>
-		</div>
-		<div>
-		<h3></h3>
 		</div>
 		</div>
         <script type="text/javascript">
@@ -217,7 +180,7 @@
 								.rangeRoundBands([padding_left, w-padding_right], 0.05);
 
 				var yScale = d3.scale.linear()
-								.domain([0, 27])
+								.domain([0, 40])
 								.range([h-padding_bottom, padding_top]);
 								
 				//Define Y axis
@@ -306,7 +269,7 @@
 						tooltip.select("#eap")
 							.text(d.eap + " EAP");
 						tooltip.select("strong")
-							.text(d.aine);
+							.text(d.aine + " [" + d.kool + "]");
 				   
 						//Show the tooltip
 						tooltip.classed("hidden", false);
@@ -352,252 +315,6 @@
 					.attr("text-anchor", "middle")
 					.text("ajakulu EAP kohta, h");
 			});
-        </script>
-		
-		<script type="text/javascript">
-			//Chart 2
-			//Width and height
-			var w2 = 270;
-			var h2 = 270;
-			var outerRadius = w2 / 2;
-			var innerRadius = w2 / 3;
-			
-			var dataset = [];
-			var accessor = function(d) {
-				return {
-					hours: d.tunde,
-					module: d.moodul
-				};	
-			}
-			
-			var file = d3.json("data/modules_courses.json", function(error, json) {
-				var modules = json.modules;
-
-				var arc = d3.svg.arc()
-								.innerRadius(innerRadius)
-								.outerRadius(outerRadius);
-				
-				var pie = d3.layout.pie();
-				
-				//Easy colors accessible via a 10-step ordinal scale
-				var color = d3.scale.category10();
-
-				//Create SVG element
-				var svg2 = d3.select("body").select("#chart2").select("svg")
-							.attr("width", w2)
-							.attr("height", h2);
-				
-				//Set up groups
-				var arcs = svg2.selectAll("g.arc")
-					.data(pie(modules.map(function(d) { return d.hours; })))
-					.enter()
-					.append("g")
-					.attr("class", "arc")
-					.attr("transform", "translate(" + outerRadius + "," + outerRadius + ")")
-					.on("mouseover", function(d, i) {
-						// Update fill
-						d3.select(this).select("path")
-							.attr("fill", "#ccc");
-						// Update module name
-						d3.select("#chart2").select("#explainText").select("#moduleName")
-							.text(modules[i].name);
-						// Update module courses
-						var courses = d3.select("#chart2").select("#explainText").select("ul").selectAll("li")
-							.data(modules[i].courses);
-						
-						courses
-							.text(function(d) { return d; });
-							
-						courses.enter().append("li")
-							.text(function(d) { return d; });
-							
-						courses.exit().remove();
-						
-						// Update pie inner text
-						d3.select("#chart2").select("#pieInnerText")
-							.text(Math.round(modules[i].hours) + " h");
-					})
-					.on("mouseout", function(d, i) {
-						// Update fill
-						d3.select(this).select("path")
-							.attr("fill", color(i));
-					});
-				
-				//Draw arc paths
-				arcs.append("path")
-					.attr("fill", function(d, i) {
-						return color(i);
-					})
-					.attr("d", arc);
-				
-				//Labels
-				arcs.append("text")
-					.attr("transform", function(d) {
-						return "translate(" + arc.centroid(d) + ")";
-					})
-					.attr("text-anchor", "middle")
-					.attr("font-family", "sans-serif")
-					.attr("font-weight", "bold");/*
-					.text(function(d) {
-						return Math.round(d.value);
-					});*/
-				
-				// Label inside ring
-				svg2.append("text")
-					.attr("id", "pieInnerText")
-					.attr("text-anchor", "middle")
-					.attr("x", w2/2 * 1.02)			// magic numbers to rectify position
-					.attr("y", (h2/2) * 1.09)
-					.text("---");
-			});
-		</script>
-		<script type="text/javascript">
-			//Chart 3
-			var w3 = 600;
-			var h3 = 180;
-			var padding_left3 = 20;
-			var padding_bottom3 = 40;
-			
-			var daysOfWeek = ["E", "T", "K", "N", "R", "L", "P"];
-			
-			//Get data
-			var dataByDay = [];
-			var accessor = function(d) {
-				return {
-					hours: 24 * d.days,
-					weekday: +d.weekday,
-					year: +d.year,
-					week: +d.week,
-					date: d3.time.format("%d.%m.%Y").parse(d.date)
-				};	
-			}
-			var parser = d3.dsv(";", "text/plain");
-            var file = parser("data/by_day.csv", accessor, function(error, rows) {
-				dataByDay = rows;
-				
-				// Define scales
-				var weekMin = d3.min(dataByDay, function(d) { return d.week; });		// min week
-				var weekMax = d3.max(dataByDay, function(d) { return d.week; });		// max week
-				var hoursMin = d3.min(dataByDay, function(d) { return d.hours; });		// min hours
-				var hoursMax = d3.max(dataByDay, function(d) { return d.hours; });		// max hours
-				var dateMin = d3.min(dataByDay, function(d) { return d.date; });		// max hours
-				var dateMax = d3.max(dataByDay, function(d) { return d.date; });		// max hours
-				var dayMin = 1;
-				var dayMax = 7;
-				
-				var xScale = d3.scale.ordinal()
-					.domain(d3.range(weekMin, weekMax+1))
-					.rangeRoundBands([0, w3], 0);
-				var yScale = d3.scale.ordinal()
-					.domain(d3.range(dayMin, dayMax+1))
-					.rangeRoundBands([0, h3-padding_bottom3], 0);
-					
-				var colorMin = "#fcfbfd";
-				var colorMax = "#3f007d";
-				var interpolate2 = d3.interpolateRgb(colorMin, colorMax);
-				var colorScale2 = d3.scale.linear()
-					.domain([hoursMin, hoursMax])
-					.range([0, 1]);
-				function colorVal(v) {
-					return interpolate2(colorScale2(v));
-				}
-				
-				var timeScale = d3.time.scale()
-					.domain([dateMin, dateMax])
-					.range([xScale(weekMin), xScale(weekMax) + xScale.rangeBand()]);
-				
-				//Create SVG element				
-				var svg3 = d3.select("#chart3").select("svg")
-					.attr("width", w3)
-					.attr("height", h3);
-					
-				//Create axes
-				svg3.append("g")
-					.selectAll(".yTickLabel")
-					.data(daysOfWeek)
-					.enter()
-					.append("text")
-					.attr("class", "y axis")
-					.attr("text-anchor", "start")
-					.attr("x", function(d) { return xScale(weekMin) - 20; })
-					.attr("y", function(d, i) { return yScale(i+1) + 0.8 * yScale.rangeBand(); })
-					.text(function(d) { return d; });
-					
-				var timeAxis = d3.svg.axis()
-					.scale(timeScale)
-					.ticks(3);
-					
-				svg3.append("g")
-					.attr("class", "time axis")
-					.attr("transform", "translate(0," + (h3-padding_bottom3/2) + ")")
-					.call(timeAxis)
-					
-				//Create background rect
-				xRange = xScale.range();
-				yRange = yScale.range();
-				
-				svg3.append("rect")
-					.attr("x", xScale(weekMin))
-					.attr("y", yScale(dayMin))
-					.attr("width", xRange[xRange.length-1]-xRange[0]+xScale.rangeBand())
-					.attr("height", yRange[yRange.length-1]-yRange[0]+yScale.rangeBand())
-					.attr("fill", colorMin);
-				
-				//Enter data
-				svg3.selectAll(".datapoint")
-					.data(dataByDay)
-					.enter()
-					.append("rect")
-					.attr("x", function(d, i) { return xScale(d.week); })
-					.attr("width", function(d) { return xScale.rangeBand(); })
-					.attr("y", function(d, i) { return yScale(d.weekday); })
-					.attr("height", function(d) { return yScale.rangeBand(); })
-					.attr("fill", function(d) { return colorVal(d.hours); })
-					.on("mouseover", function(d, i) {
-
-						//Get this rect's x/y values, then augment for the tooltip
-						var xPosition = parseFloat(d3.select(this).attr("x")) + xScale.rangeBand() / 2;
-						var yPosition = parseFloat(d3.select(this).attr("y")) / 2 + yScale.rangeBand();
-
-						//Update the tooltip position and value
-						tooltip = d3.select("#chart3").select("#tooltip")
-							.style("left", xPosition + "px")
-							.style("top", yPosition + "px")	
-						
-						tooltip.select("#week")
-							.text("õpingute " + d.week + ". nädal");
-						var hours = Math.floor(d.hours);
-						var minutes = Math.round((d.hours % 1) * 60);
-						tooltip.select("#hours")
-							.text(hours + " h " + minutes + " min");
-						var dateFormatter = d3.time.format("%d.%m.%Y");
-						tooltip.select("strong")
-							.text(daysOfWeek[d.weekday - 1] + " " + dateFormatter(d.date));
-				   
-						//Show the tooltip
-						tooltip.classed("hidden", false);
-
-				   })
-				   .on("mouseout", function() {
-				   
-						//Hide the tooltip
-						d3.select("#chart3").select("#tooltip").classed("hidden", true);
-						
-					});
-
-			});
-		</script>
-		
-		
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		  ga('create', 'UA-37828611-1', 'auto');
-		  ga('send', 'pageview');
-
-		</script>
+        </script>		
     </body>
 </html>
